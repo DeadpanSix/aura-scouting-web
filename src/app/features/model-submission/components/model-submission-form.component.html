@@ -1,32 +1,76 @@
 <section id="model-submission">
   <h2>Model Submission</h2>
 
-  <div class="contact-form-wrapper">
-    <form id="emailForm" novalidate (ngSubmit)="onSubmit(contactForm)" #contactForm="ngForm">
-      <div class="picture-to-upload" [class.previewing]="isPreviewing">
-        <input id="image_attachment" class="file-input" type="file" name="image_attachment" accept="image/*"
-          (change)="onFileSelected($event)">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <input
+      type="text"
+      formControlName="name"
+      placeholder="Full Name"
+    />
+    <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+      Name is required (2–100 characters)
+    </div>
 
-        <img [src]="imagePreviewSrc" id="img-preview" class="img-preview" alt="Preview" [style.display]="'block'" />
+    <input
+      type="number"
+      formControlName="age"
+      placeholder="Age"
+      min="12"
+      max="100"
+    />
+    <div *ngIf="form.get('age')?.touched && form.get('age')?.invalid">
+      Age must be between 12 and 100
+    </div>
 
-        <div class="upload-main-text" *ngIf="!isPreviewing">
-          <!-- Placeholder text/icon could go here -->
-        </div>
-      </div>
+    <input
+      type="number"
+      formControlName="height"
+      placeholder="Height (cm)"
+      min="100"
+      max="250"
+    />
+    <div *ngIf="form.get('height')?.touched && form.get('height')?.invalid">
+      Height must be between 100cm and 250cm
+    </div>
 
-      <p class="text-xs text-gray-500 mt-1" style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">
-        Max file size: 5MB. Allowed types: JPG, PNG, GIF.
-      </p>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="Email"
+    />
+    <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+      Enter a valid email
+    </div>
 
-      <input type="text" name="name" placeholder="Name*" class="text" required [(ngModel)]="formData.name">
-      <input type="email" name="email" placeholder="Email*" class="text" required [(ngModel)]="formData.email">
-      <input type="text" name="height" placeholder="Height*" class="text" required [(ngModel)]="formData.height">
-      <input type="text" name="cellphone" placeholder="Cell Phone" class="text" [(ngModel)]="formData.cellphone">
+    <input
+      type="text"
+      formControlName="social_network"
+      placeholder="Instagram / TikTok / etc"
+    />
 
-      <button type="submit" id="submitButton" [disabled]="isSubmitting || contactForm.invalid">
-        <span id="buttonText">{{ isSubmitting ? 'Sending...' : 'SUBMIT' }}</span>
-        <div id="loadingSpinner" class="spinner" [class.hidden]="!isSubmitting"></div>
-      </button>
-    </form>
-  </div>
+    <textarea
+      formControlName="about_me"
+      placeholder="Tell us about yourself"
+      rows="4"
+    ></textarea>
+
+    <input
+      type="tel"
+      formControlName="cellphone"
+      placeholder="Cellphone"
+    />
+
+    <input
+      type="file"
+      (change)="onFileSelected($event)"
+      accept=".jpg,.jpeg,.png,.heic,.heif"
+    />
+
+    <button
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      Submit
+    </button>
+  </form>
 </section>
