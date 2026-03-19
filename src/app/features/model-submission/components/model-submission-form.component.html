@@ -1,76 +1,169 @@
-<section id="model-submission">
+<section class="model-submission-form">
   <h2>Model Submission</h2>
 
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <input
-      type="text"
-      formControlName="name"
-      placeholder="Full Name"
-    />
-    <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
-      Name is required (2–100 characters)
+    <div class="upload-container">
+      <div
+        class="upload-box"
+        (click)="fileInput.click()"
+        *ngIf="!previewUrl"
+      >
+        <p>Click to upload a selfie of yourself</p>
+        <span>JPG, JPEG, PNG, HEIF, HEIC (max 10MB)</span>
+      </div>
+
+      <div class="image-preview" *ngIf="previewUrl">
+        <img [src]="previewUrl" alt="Preview">
+
+        <button
+          type="button"
+          class="remove-btn"
+          (click)="removeImage($event)"
+        >
+          ✕
+        </button>
+      </div>
+
+      <input
+        #fileInput
+        type="file"
+        hidden
+        accept=".jpg,.jpeg,.png,.heic,.heif"
+        (change)="onFileSelected($event)"
+      />
+
+      <div *ngIf="form.get('photo')?.touched && form.get('photo')?.invalid">
+        Upload a selfie of yourself (max 10 MB)
+      </div>
     </div>
 
-    <input
-      type="number"
-      formControlName="age"
-      placeholder="Age"
-      min="12"
-      max="100"
-    />
-    <div *ngIf="form.get('age')?.touched && form.get('age')?.invalid">
-      Age must be between 12 and 100
+    <div class="input-field">
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        placeholder=" "
+        required
+      />
+      <label for="name">Name</label>
+      <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+        Name is required (2–100 characters)
+      </div>
     </div>
 
-    <input
-      type="number"
-      formControlName="height"
-      placeholder="Height (cm)"
-      min="100"
-      max="250"
-    />
-    <div *ngIf="form.get('height')?.touched && form.get('height')?.invalid">
-      Height must be between 100cm and 250cm
+    <div class="input-field">
+      <input
+        type="number"
+        formControlName="age"
+        placeholder=" "
+        min="12"
+        max="100"
+        required
+      />
+      <label for="age">Age</label>
+      <div *ngIf="form.get('age')?.touched && form.get('age')?.invalid">
+        Age must be between 12 and 100
+      </div>
     </div>
 
-    <input
-      type="email"
-      formControlName="email"
-      placeholder="Email"
-    />
-    <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
-      Enter a valid email
+    <div class="input-field">
+      <input
+        type="number"
+        formControlName="height"
+        placeholder=" "
+        min="100"
+        max="250"
+        required
+      />
+      <label for="height">Height (cm)</label>
+      <div *ngIf="form.get('height')?.touched && form.get('height')?.invalid">
+        Height must be between 100cm and 250cm
+      </div>
     </div>
 
-    <input
-      type="text"
-      formControlName="social_network"
-      placeholder="Instagram / TikTok / etc"
-    />
+    <div class="input-field">
+      <input
+        type="email"
+        formControlName="email"
+        placeholder=" "
+        required
+      />
+      <label for="email">Email</label>
+      <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+        Enter a valid email
+      </div>
+    </div>
 
-    <textarea
-      formControlName="about_me"
-      placeholder="Tell us about yourself"
-      rows="4"
-    ></textarea>
+    <div class="input-field">
+      <input
+        type="text"
+        formControlName="social_network"
+        placeholder=" "
+        required
+      />
+      <label for="social_network">Social Network</label>
+      <div
+        *ngIf="
+          form.get('social_network')?.touched &&
+          form.get('social_network')?.invalid
+        "
+      >
+        Enter a social network
+      </div>
+    </div>
 
-    <input
-      type="tel"
-      formControlName="cellphone"
-      placeholder="Cellphone"
-    />
+    <div class="input-field">
+      <input
+        type="text"
+        formControlName="about_me"
+        placeholder=" "
+        required
+      />
+      <label for="about_me">Tell us about yourself</label>
+      <div
+        *ngIf="
+          form.get('about_me')?.touched &&
+          form.get('about_me')?.invalid
+        "
+      >
+        Please tell us more about you
+      </div>
+    </div>
 
-    <input
-      type="file"
-      (change)="onFileSelected($event)"
-      accept=".jpg,.jpeg,.png,.heic,.heif"
-    />
+    <div class="input-field">
+      <input
+        type="tel"
+        formControlName="cellphone"
+        placeholder=" "
+        required
+      />
+      <label for="cellphone">Cellphone</label>
+      <div
+        *ngIf="
+          form.get('cellphone')?.touched &&
+          form.get('cellphone')?.invalid
+        "
+      >
+        Enter a valid cellphone
+      </div>
+    </div>
 
+    <div *ngIf="successMessage" class="form-message success">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="form-message error">
+      {{ errorMessage }}
+    </div>
     <button
       type="submit"
-      [disabled]="form.invalid"
+      (click)="$event.stopPropagation()"
+      [disabled]="loading"
+      class="submit-btn"
     >
-      Submit
+      <span *ngIf="!loading">Submit</span>
+
+      <span *ngIf="loading" class="spinner"></span>
     </button>
   </form>
 </section>
